@@ -1,0 +1,6 @@
+.cproject
+.project
+.settings/
+main
+*.d
+*.o
