@@ -6,12 +6,12 @@ config += c++14 Wall
 
 flags += -W -Wall -Wno-unused-parameter -Wno-sign-compare #-Werror
 
-main.includes +=
+mandelbrot.includes +=
     include
     matgui/include
 
-main.src =
+mandelbrot.src =
     src/*.cpp
     matgui/src/*.cpp
 
-main.libs += -lGL -lSDL2 -lSDL2_image
+mandelbrot.libs += -lGL -lSDL2 -lSDL2_image
