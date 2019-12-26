@@ -2,16 +2,20 @@
 # Matmake file
 # https://github.com/mls-m5/matmake
 
-config += c++14 Wall
+config += c++14 Wall debug
 
 flags += -W -Wall -Wno-unused-parameter -Wno-sign-compare #-Werror
 
-mandelbrot.includes +=
+libs += -lGL -lSDL2 -lSDL2_image
+
+includes +=
     include
     matgui/include
 
 mandelbrot.src =
-    src/*.cpp
+    src/main.cpp
     matgui/src/*.cpp
 
-mandelbrot.libs += -lGL -lSDL2 -lSDL2_image
+mandelbrot-shader.src =
+	src/main-shader.cpp
+	matgui/src/*.cpp
