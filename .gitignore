@@ -4,3 +4,4 @@
 mandelbrot
 *.d
 *.o
+mandelbrot-shader

@@ -18,11 +18,12 @@ const string vertex =
 in vec4 position;
 out vec2 fPos;
 uniform float scale;
+uniform double x;
+uniform double y;
 
 void main() {
 	gl_Position = position;
-//	fPos = vec2(position.x / 2 + .5, position.y / 2 + .5);
-	fPos = position.xy * 2 * scale;
+	fPos = position.xy * 2 * scale + vec2(x, y);
 }
 
 )_";
@@ -48,7 +49,6 @@ void main() {
 		}
 	}
 	
-//	fragColor = vec4(fPos.xy, 1, 1);
 	fragColor = vec4(value, sqrt(value), 0, 1);
 }
 
@@ -82,11 +82,26 @@ int main(int argc, char **argv) {
 	vao.unbind();
 
 	auto scaleUniform = shader.getUniform("scale");
+	auto xUniform = shader.getUniform("x");
+	auto yUniform = shader.getUniform("y");
 
 	float scale = 1;
+	double centerX = 0, centerY = 0;
 
-	window.scroll.connect([&scale](View::ScrollArgument arg) {
+	double mouseX, mouseY;
+
+	window.pointerMoved.connect([&](View::PointerArgument arg) {
+		std::tie(mouseX, mouseY) = arg;
+	});
+
+	window.scroll.connect([&](View::ScrollArgument arg) {
 		scale *= pow(2, -arg.y / 10);
+
+		auto x = mouseX / window.width() * 2 - 1;
+		auto y = -(mouseY / window.height() * 2 - 1);
+
+		centerX += x * scale * .1 * arg.y;
+		centerY += y * scale * .1 * arg.y;
 	});
 
 	window.frameUpdate.connect([&]() {
@@ -95,6 +110,8 @@ int main(int argc, char **argv) {
 		shader.use();
 
 		glUniform1f(scaleUniform, scale);
+		glUniform1d(xUniform, centerX);
+		glUniform1d(yUniform, centerY);
 
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
